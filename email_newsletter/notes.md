@@ -18,7 +18,7 @@ docker ps -a
 docker start container_id
 SKIP_DOCKER=true ./scripts/init_db.sh
 
-curl -i -X POST -d 'email=thomas_mann5@hotmail.com&name=Tom' http://127.0.0.1:8000/subscriptions
+curl -i -X POST -d 'email=thomas_mann6@hotmail.com&name=Tom' http://127.0.0.1:8000/subscriptions
 
 docker build --tag emailnewsletter --file Dockerfile .
 docker run -p 8000:8000 emailnewsletter

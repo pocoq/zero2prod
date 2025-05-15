@@ -2,10 +2,8 @@
 use email_newsletter::configuration::get_configuration;
 use email_newsletter::startup::run;
 use email_newsletter::telemetry::{get_subscriber, init_subscriber};
-use sqlx:: PgPool;
+use sqlx::postgres::PgPoolOptions;
 use std::net::TcpListener;
-use secrecy::ExposeSecret;
-
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
@@ -14,8 +12,7 @@ async fn main() -> Result<(), std::io::Error> {
 	
 	// Set up tracing subscriber for structured logging	
     let configuration = get_configuration().expect("Failed to read configuration file");
-    let connection_pool = PgPool::connect_lazy(&configuration.database.connection_string().expose_secret())
-        .expect("Failed to connect to Postgres");
+    let connection_pool = PgPoolOptions::new().connect_lazy_with(configuration.database.with_db());
     let address = format!("{}:{}", configuration.application.host, configuration.application.port);
     let listener = TcpListener::bind(address)?;
 
